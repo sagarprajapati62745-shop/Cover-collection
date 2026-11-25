@@ -89,6 +89,29 @@ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 document.getElementById(id).classList.add('active');
 }
 </script>
+  
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyARFoIyyKk6LqFgdk9kYwZmj2I1xZdRV5M",
+    authDomain: "cover-collection.firebaseapp.com",
+    projectId: "cover-collection",
+    storageBucket: "cover-collection.firebasestorage.app",
+    messagingSenderId: "239609588082",
+    appId: "1:239609588082:web:d1e9326003e41f8cf115eb",
+    measurementId: "G-V0W0NXM48Z"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  console.log("Firebase Connected Successfully");
+</script>
+  
 </body>
 </html>
 
