@@ -92,6 +92,7 @@ document.getElementById(id).classList.add('active');
   
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+
 import {
   getFirestore,
   collection,
@@ -120,7 +121,7 @@ function showCovers() {
   const keyword = search.value.toLowerCase().trim();
 
   const filtered = allCovers.filter(cover =>
-    String(cover.model || "").toLowerCase().includes(keyword)
+    String(cover.Model || "").toLowerCase().includes(keyword)
   );
 
   products.replaceChildren();
@@ -134,33 +135,27 @@ function showCovers() {
     const card = document.createElement("div");
     card.className = "card";
 
-    if (cover.imageUrl) {
+    if (cover.ImageUrl) {
       const img = document.createElement("img");
-      img.src = cover.imageUrl;
-      img.alt = cover.model || "Mobile Cover";
-      img.onerror = () => {
-        img.remove();
-        const placeholder = document.createElement("p");
-        placeholder.textContent = "Photo उपलब्ध नहीं है";
-        card.prepend(placeholder);
-      };
+      img.src = cover.ImageUrl;
+      img.alt = cover.Model || "Mobile Cover";
       card.appendChild(img);
     } else {
-      const placeholder = document.createElement("p");
-      placeholder.textContent = "Photo उपलब्ध नहीं है";
-      card.appendChild(placeholder);
+      const photo = document.createElement("p");
+      photo.textContent = "Photo उपलब्ध नहीं है";
+      card.appendChild(photo);
     }
 
     const name = document.createElement("h3");
-    name.textContent = cover.model || "Mobile Cover";
+    name.textContent = cover.Model || "Mobile Cover";
 
     const price = document.createElement("div");
     price.className = "price";
-    price.textContent = "₹" + (cover.price ?? 0);
+    price.textContent = "₹" + (cover.Price ?? 0);
 
     const qty = document.createElement("div");
     qty.className = "qty";
-    qty.textContent = "Quantity: " + (cover.quantity ?? 0);
+    qty.textContent = "Quantity: " + (cover.Quantity ?? 0);
 
     card.append(name, price, qty);
     products.appendChild(card);
@@ -175,8 +170,6 @@ onSnapshot(collection(db, "Cover"), snapshot => {
 }, error => {
   products.textContent = "डेटा लोड नहीं हुआ: " + error.message;
 });
-</script>
-  
 </script>
   
 </body>
