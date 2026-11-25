@@ -91,25 +91,92 @@ document.getElementById(id).classList.add('active');
 </script>
   
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyARFoIyyKk6LqFgdk9kYwZmj2I1xZdRV5M",
-    authDomain: "cover-collection.firebaseapp.com",
-    projectId: "cover-collection",
-    storageBucket: "cover-collection.firebasestorage.app",
-    messagingSenderId: "239609588082",
-    appId: "1:239609588082:web:d1e9326003e41f8cf115eb",
-    measurementId: "G-V0W0NXM48Z"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyARFoIyyKk6LqFgdk9kYwZmj2I1xZdRV5M",
+  authDomain: "cover-collection.firebaseapp.com",
+  projectId: "cover-collection",
+  storageBucket: "cover-collection.firebasestorage.app",
+  messagingSenderId: "239609588082",
+  appId: "1:239609588082:web:d1e9326003e41f8cf115eb",
+  measurementId: "G-V0W0NXM48Z"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  console.log("Firebase Connected Successfully");
+const products = document.getElementById("products");
+const search = document.getElementById("search");
+
+let allCovers = [];
+
+function showCovers() {
+  const keyword = search.value.toLowerCase().trim();
+
+  const filtered = allCovers.filter(cover =>
+    String(cover.model || "").toLowerCase().includes(keyword)
+  );
+
+  products.replaceChildren();
+
+  if (filtered.length === 0) {
+    products.textContent = "कोई Cover नहीं मिला।";
+    return;
+  }
+
+  filtered.forEach(cover => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    if (cover.imageUrl) {
+      const img = document.createElement("img");
+      img.src = cover.imageUrl;
+      img.alt = cover.model || "Mobile Cover";
+      img.onerror = () => {
+        img.remove();
+        const placeholder = document.createElement("p");
+        placeholder.textContent = "Photo उपलब्ध नहीं है";
+        card.prepend(placeholder);
+      };
+      card.appendChild(img);
+    } else {
+      const placeholder = document.createElement("p");
+      placeholder.textContent = "Photo उपलब्ध नहीं है";
+      card.appendChild(placeholder);
+    }
+
+    const name = document.createElement("h3");
+    name.textContent = cover.model || "Mobile Cover";
+
+    const price = document.createElement("div");
+    price.className = "price";
+    price.textContent = "₹" + (cover.price ?? 0);
+
+    const qty = document.createElement("div");
+    qty.className = "qty";
+    qty.textContent = "Quantity: " + (cover.quantity ?? 0);
+
+    card.append(name, price, qty);
+    products.appendChild(card);
+  });
+}
+
+search.addEventListener("input", showCovers);
+
+onSnapshot(collection(db, "covers"), snapshot => {
+  allCovers = snapshot.docs.map(doc => doc.data());
+  showCovers();
+}, error => {
+  products.textContent = "डेटा लोड नहीं हुआ: " + error.message;
+});
+</script>
+  
 </script>
   
 </body>
