@@ -169,7 +169,7 @@ function showCovers() {
 
 search.addEventListener("input", showCovers);
 
-onSnapshot(collection(db, "covers"), snapshot => {
+onSnapshot(collection(db, "Cover"), snapshot => {
   allCovers = snapshot.docs.map(doc => doc.data());
   showCovers();
 }, error => {
