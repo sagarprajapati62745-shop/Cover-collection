@@ -97,6 +97,8 @@ import {
   getFirestore,
   collection,
   onSnapshot
+  doc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -163,10 +165,19 @@ function showCovers() {
 }
 
 search.addEventListener("input", showCovers);
-onSnapshot(collection(db, "Cover"), snapshot => {
-  allCovers = snapshot.docs.map(doc => doc.data());
-  products.textContent = "Firebase Documents: " + snapshot.size;
-}, error => {
+getDoc(doc(db, "Cover", "Z6zaU6BZRsxK2rQZuG0l"))
+.then(snapshot => {
+  if (snapshot.exists()) {
+    const data = snapshot.data();
+    products.textContent =
+      "Model: " + data.Model +
+      " | Price: ₹" + data.Price +
+      " | Quantity: " + data.Quantity;
+  } else {
+    products.textContent = "Document नहीं मिला";
+  }
+})
+.catch(error => {
   products.textContent = "Error: " + error.message;
 });
 </script>
