@@ -163,12 +163,11 @@ function showCovers() {
 }
 
 search.addEventListener("input", showCovers);
-
 onSnapshot(collection(db, "Cover"), snapshot => {
   allCovers = snapshot.docs.map(doc => doc.data());
-  showCovers();
+  products.textContent = "Firebase Documents: " + snapshot.size;
 }, error => {
-  products.textContent = "डेटा लोड नहीं हुआ: " + error.message;
+  products.textContent = "Error: " + error.message;
 });
 </script>
   
