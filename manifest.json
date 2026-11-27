@@ -1,0 +1,13 @@
+
+{
+  "name": "Cover Collection",
+  "short_name": "Cover Collection",
+  "description": "Mobile Cover Shopping App",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f5f9",
+  "theme_color": "#171717",
+  "lang": "hi"
+}
