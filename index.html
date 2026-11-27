@@ -267,6 +267,16 @@ document.getElementById("logoutBtn").onclick = async () => {
   document.getElementById("loginBox").style.display = "block";
 };
 </script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("App Ready"))
+      .catch(error => console.log("App Error:", error));
+  });
+}
+</script>
   
 </body>
 </html>
