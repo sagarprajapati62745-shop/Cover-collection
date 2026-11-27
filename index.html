@@ -198,19 +198,10 @@ function showCovers() {
 }
 
 search.addEventListener("input", showCovers);
-getDoc(doc(db, "Cover", "Z6zaU6BZRsxK2rQZuG0l"))
-.then(snapshot => {
-  if (snapshot.exists()) {
-    const data = snapshot.data();
-    products.textContent =
-      "Model: " + data.Model +
-      " | Price: ₹" + data.Price +
-      " | Quantity: " + data.Quantity;
-  } else {
-    products.textContent = "Document नहीं मिला";
-  }
-})
-.catch(error => {
+onSnapshot(collection(db, "Cover"), snapshot => {
+  allCovers = snapshot.docs.map(doc => doc.data());
+  showCovers();
+}, error => {
   products.textContent = "Error: " + error.message;
 });
   const ADMIN_UID = "2ehRN7G3EtbVa5FiXuupOwBNPqv2";
