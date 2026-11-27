@@ -72,10 +72,33 @@ a{color:#087cce}
 </div>
 </div>
 
-<div id="admin" class="page">
-<h2>Admin Panel</h2>
-<p>Admin system अगली स्टेप में जोड़ा जाएगा।</p>
-</div>
+  <div id="admin" class="page">
+  <h2>Admin Panel</h2>
+
+  <div id="loginBox">
+    <input id="adminEmail" type="email" placeholder="Admin Email">
+    <br><br>
+    <input id="adminPassword" type="password" placeholder="Admin Password">
+    <br><br>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <div id="productBox" style="display:none">
+    <h3>Add New Cover</h3>
+    <input id="model" placeholder="Phone Model">
+    <br><br>
+    <input id="price" type="number" placeholder="Price">
+    <br><br>
+    <input id="quantity" type="number" placeholder="Quantity">
+    <br><br>
+    <input id="imageUrl" placeholder="Photo URL">
+    <br><br>
+    <button id="addProductBtn">Add Product</button>
+    <button id="logoutBtn">Logout</button>
+    <p id="productMessage"></p>
+  </div>
+  </div>
 
 <nav>
 <button onclick="showPage('home')">🏠 Home</button>
@@ -96,10 +119,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebas
 import {
   getFirestore,
   collection,
-  onSnapshot
+  onSnapshot,
   doc,
-getDoc
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyARFoIyyKk6LqFgdk9kYwZmj2I1xZdRV5M",
@@ -113,6 +145,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+  const auth = getAuth(app);
 
 const products = document.getElementById("products");
 const search = document.getElementById("search");
@@ -180,6 +213,66 @@ getDoc(doc(db, "Cover", "Z6zaU6BZRsxK2rQZuG0l"))
 .catch(error => {
   products.textContent = "Error: " + error.message;
 });
+  const ADMIN_UID = "2ehRN7G3EtbVa5FiXuupOwBNPqv2";
+
+document.getElementById("loginBtn").onclick = async () => {
+  const email = document.getElementById("adminEmail").value;
+  const password = document.getElementById("adminPassword").value;
+
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+
+    if (result.user.uid !== ADMIN_UID) {
+      await signOut(auth);
+      document.getElementById("loginMessage").textContent =
+        "आप Admin नहीं हैं।";
+      return;
+    }
+
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("productBox").style.display = "block";
+    document.getElementById("loginMessage").textContent = "";
+  } catch (error) {
+    document.getElementById("loginMessage").textContent = error.message;
+  }
+};
+
+document.getElementById("addProductBtn").onclick = async () => {
+  const model = document.getElementById("model").value.trim();
+  const price = Number(document.getElementById("price").value);
+  const quantity = Number(document.getElementById("quantity").value);
+  const imageUrl = document.getElementById("imageUrl").value.trim();
+
+  if (!model || !imageUrl || !Number.isFinite(price) || !Number.isFinite(quantity) || price < 0 || quantity < 0) {
+    document.getElementById("productMessage").textContent =
+      "सभी जानकारी सही-सही भरें।";
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "Cover"), {
+      Model: model,
+      Price: price,
+      Quantity: quantity,
+      ImageUrl: imageUrl
+    });
+
+    document.getElementById("productMessage").textContent =
+      "Product सफलतापूर्वक जुड़ गया!";
+    document.getElementById("model").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("quantity").value = "";
+    document.getElementById("imageUrl").value = "";
+  } catch (error) {
+    document.getElementById("productMessage").textContent = error.message;
+  }
+};
+
+document.getElementById("logoutBtn").onclick = async () => {
+  await signOut(auth);
+  document.getElementById("productBox").style.display = "none";
+  document.getElementById("loginBox").style.display = "block";
+};
 </script>
   
 </body>
