@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.sagarprajapati62745_shop.twa",
+      "sha256_cert_fingerprints": [
+        "40:A3:91:AC:4D:83:1C:C4:2A:92:CD:7F:21:C3:5B:0D:29:78:CD:59:87:EA:C2:6B:26:C5:6D:0E:B4:F9:8A:9A"
+      ]
+    }
+  }
+]
